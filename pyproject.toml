@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vantamind-suite"
+version = "0.1.0"
+description = "VantaMind AI and CodeCraft CLI – offline-first AI assistant and app generator with Ollama support"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "VantaMind", email = "dev@vantamind.local" }
+]
+dependencies = [
+  "typer>=0.12.3",
+  "rich>=13.7.1",
+  "requests>=2.32.3",
+  "jinja2>=3.1.4",
+  "pyyaml>=6.0.2",
+]
+
+[project.urls]
+Homepage = "https://example.com/vantamind"
+
+[project.scripts]
+vantamind = "vantamind_ai.cli:main"
+codecraft = "codecraft_cli.cli:main"
+
+[tool.hatch.build]
+packages = ["src/vantamind_ai", "src/codecraft_cli", "src/vantamind_suite"]
+
