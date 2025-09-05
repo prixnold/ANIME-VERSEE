@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vantamind"
+version = "0.1.0"
+description = "VantaMind AI: Local-first AI assistant and CodeCraft CLI"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "VantaMind" }]
+license = { text = "MIT" }
+keywords = ["ai", "cli", "ollama", "code-generation", "diffusers", "assistant"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "typer>=0.12.3",
+  "rich>=13.7.1",
+  "requests>=2.31.0",
+  "pydantic>=2.7.0",
+  "jinja2>=3.1.4",
+]
+
+[project.optional-dependencies]
+image = [
+  "diffusers>=0.28.0",
+  "transformers>=4.41.0",
+  "safetensors>=0.4.3",
+  "torch>=2.2.0; platform_system != 'Darwin' or platform_machine != 'arm64'",
+]
+
+[project.urls]
+Homepage = "https://example.com/vantamind"
+
+[project.scripts]
+vantamind = "vantamind.cli:main"
+codecraft = "vantamind.codecraft_cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests*"]
+
