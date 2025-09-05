@@ -20,15 +20,23 @@ class OllamaClient:
         except Exception:
             return False
 
-    def chat(self, model: str, messages: List[Dict[str, str]], temperature: float = 0.2) -> str:
+    def chat(
+        self,
+        model: str,
+        messages: List[Dict[str, str]],
+        temperature: float = 0.2,
+        options: Optional[Dict] = None,
+        stream: bool = False,
+    ) -> str:
         url = f"{self.base_url}/api/chat"
+        merged_options: Dict = {"temperature": temperature}
+        if options:
+            merged_options.update(options)
         payload = {
             "model": model,
             "messages": messages,
-            "stream": False,
-            "options": {
-                "temperature": temperature,
-            },
+            "stream": stream,
+            "options": merged_options,
         }
         response = requests.post(url, json=payload, timeout=self.timeout_seconds)
         response.raise_for_status()
@@ -38,15 +46,23 @@ class OllamaClient:
             return data["message"].get("content", "")
         return data.get("response", "")
 
-    def generate(self, model: str, prompt: str, temperature: float = 0.2) -> str:
+    def generate(
+        self,
+        model: str,
+        prompt: str,
+        temperature: float = 0.2,
+        options: Optional[Dict] = None,
+        stream: bool = False,
+    ) -> str:
         url = f"{self.base_url}/api/generate"
+        merged_options: Dict = {"temperature": temperature}
+        if options:
+            merged_options.update(options)
         payload = {
             "model": model,
             "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": temperature,
-            },
+            "stream": stream,
+            "options": merged_options,
         }
         response = requests.post(url, json=payload, timeout=self.timeout_seconds)
         response.raise_for_status()

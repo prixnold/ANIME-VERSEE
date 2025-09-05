@@ -31,6 +31,11 @@ def run(
     prompt: str = typer.Argument(..., help="Your request, e.g., 'Write a poem' or 'Generate an image...'"),
     model: str = typer.Option(None, help="Ollama model name (default from VANTAMIND_MODEL)"),
     temperature: float = typer.Option(0.2, help="Sampling temperature"),
+    top_p: float = typer.Option(1.0, help="Top-p nucleus sampling (1.0 = disabled)"),
+    repeat_penalty: float = typer.Option(1.0, help="Penalty for repeated tokens (>=1.0)"),
+    num_predict: int = typer.Option(-1, help="Max tokens to generate (-1 = unlimited)"),
+    num_ctx: int = typer.Option(4096, help="Context window size if supported by model"),
+    raw: bool = typer.Option(False, help="Disable system prompt and safety/formatting (raw completion)"),
     image_out: Optional[Path] = typer.Option(None, help="If set, attempts image generation to this file"),
 ) -> None:
     """Run VantaMind AI for a single-shot request."""
@@ -59,12 +64,18 @@ def run(
         return
 
     # Default to chat/generation
-    messages = [
+    messages = [] if raw else [
         {"role": "system", "content": "You are VantaMind, a helpful, concise assistant."},
-        {"role": "user", "content": prompt},
     ]
+    messages.append({"role": "user", "content": prompt})
     console.print(Panel.fit(f"Model: {model_name}", title="VantaMind"))
-    result = client.chat(model=model_name, messages=messages, temperature=temperature)
+    opts = {
+        "top_p": top_p,
+        "repeat_penalty": repeat_penalty,
+        "num_predict": num_predict,
+        "num_ctx": num_ctx,
+    }
+    result = client.chat(model=model_name, messages=messages, temperature=temperature, options=opts)
     console.print(result)
 
 

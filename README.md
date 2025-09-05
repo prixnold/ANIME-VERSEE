@@ -8,6 +8,8 @@ VantaMind AI is a local-first AI assistant with offline support via Ollama, plus
 - Intent detection routes tasks: image, code generation, or general chat
 - CodeCraft CLI: `codecraft "Build a to-do app #lang:python #framework:flask"`
 - Optional image generation via Diffusers (install with `pip install .[image]`)
+- Raw mode: disable assistant system prompts and filtering with `--raw`
+- Unlimited generation: set `--num-predict -1` (default) and customize `--num-ctx`
 
 ### Quickstart
 1) Install Python 3.9+
@@ -25,6 +27,7 @@ ollama pull mistral
 4) Use the assistant:
 ```bash
 vantamind "Write a short haiku about the sea"
+vantamind --raw --num-predict -1 --num-ctx 8192 --top-p 1.0 --repeat-penalty 1.0 "Dump raw continuation of this text: ..."
 ```
 
 5) Generate a project with CodeCraft:
@@ -47,6 +50,12 @@ vantamind "generate an image of a serene mountain lake at sunrise" --image-out m
 ### Environment
 - `OLLAMA_BASE_URL` (default `http://localhost:11434`)
 - `VANTAMIND_MODEL` (default `mistral`)
+
+### Advanced generation controls
+- `--raw`: omit the default system prompt; you get raw model behavior
+- `--num-predict`: max new tokens; `-1` means unlimited (subject to model limits)
+- `--num-ctx`: context window size (model-dependent)
+- `--top-p`, `--temperature`, `--repeat-penalty`: sampling controls
 
 ### License
 MIT
